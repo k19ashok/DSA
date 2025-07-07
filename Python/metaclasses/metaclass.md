@@ -11,23 +11,23 @@
 - _dct_ specifies a namespace dictionary containing definitions for the class body. This becomes the **dict** attribute of the class
 
 ```py
->>> Foo = type('Foo', (), {})
+    >>> Foo = type('Foo', (), {})
 
->>> x = Foo()
->>> x
-<__main__.Foo object at 0x04CFAD50>
+    >>> x = Foo()
+    >>> x
+    <__main__.Foo object at 0x04CFAD50>
 ```
 
 ```py
->>> Bar = type('Bar', (Foo,), dict(attr=100))
+    >>> Bar = type('Bar', (Foo,), dict(attr=100))
 
->>> x = Bar()
->>> x.attr
-100
->>> x.__class__
-<class '__main__.Bar'>
->>> x.__class__.__bases__
-(<class '__main__.Foo'>,)
+    >>> x = Bar()
+    >>> x.attr
+    100
+    >>> x.__class__
+    <class '__main__.Bar'>
+    >>> x.__class__.__bases__
+    (<class '__main__.Foo'>,)
 ```
 
 ##### ➡️ namespace is the dictionary of all the attributes and methods bound to the object. So, each object has a namespace to it
@@ -41,22 +41,22 @@
 ##### We need to override the `__new__` of `type` class to define the behaviour or "customize the behaviour" before creating "a class"
 
 ```py
->>> class Meta(type):
-...     def __new__(cls, name, bases, dct):
-...         x = super().__new__(cls, name, bases, dct)
-...         x.attr = 100
-...         return x
-...
+    >>> class Meta(type):
+    ...     def __new__(cls, name, bases, dct):
+    ...         x = super().__new__(cls, name, bases, dct)
+    ...         x.attr = 100
+    ...         return x
+    ...
 ```
 
 ##### Define a new class Foo and specify that its metaclass is the custom metaclass Meta, rather than the standard metaclass type
 
 ```py
->>> class Foo(metaclass=Meta):
-...     pass
-...
->>> Foo.attr
-100
+    >>> class Foo(metaclass=Meta):
+    ...     pass
+    ...
+    >>> Foo.attr
+    100
 ```
 
 
@@ -70,17 +70,17 @@
 
 - Django's ORM is a classic and powerful example of metaclass usage. When you define a Django model,
 
-```py
-from django.db import models
+    ```py
+    from django.db import models
 
-class MyModel(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    class MyModel(models.Model):
+        name = models.CharField(max_length=100)
+        age = models.IntegerField()
+        created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['-created_at']
-```
+        class Meta:
+            ordering = ['-created_at']
+    ```
 
 - How does Django know that name, age, and created_at should become database columns? 
 - How does it automatically add methods like save(), delete(), objects.all()?

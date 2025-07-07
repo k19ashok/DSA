@@ -248,7 +248,7 @@ class Tree:
         for k in sorted(d.keys()):
             ans.append(d[k])
         return ans
-    
+
     @property
     def is_symmetric(self):
         def traverse_lr(node):
@@ -262,7 +262,7 @@ class Tree:
                 if node.right:
                     stack.append(node.right)
             return lr
-        
+
         def traverse_rl(node):
             rl = []
             stack = [node]
@@ -274,8 +274,46 @@ class Tree:
                 if node.left:
                     stack.append(node.left)
             return rl
-        
+
         return traverse_lr(self.root.left) == traverse_rl(self.root.right)
+
+    def root_to_node(self, node):
+        path = []
+
+        def find_recurse(curr):
+            if curr is None:
+                return False
+            if curr.value == node:
+                path.append(node)
+                return True
+            path.append(curr)
+            if find_recurse(curr.left):
+                return True
+            if find_recurse(curr.right):
+                return True
+            path.pop()
+            return False
+
+        find_recurse(self.root)
+        return path
+
+    def lca(self, a, b):
+        ancestor = None
+
+        def find_recurse(node):
+            if node is None:
+                return False
+
+            if node.value in (a, b):
+                return node.value
+            lr = find_recurse(node.left)
+            rr = find_recurse(node.right)
+            if lr and rr:
+                return node
+            return lr or rr
+
+        return find_recurse(self.root)
+
 
 root = TreeNode(5)
 root.left = TreeNode(2)
@@ -308,3 +346,7 @@ st.root.left.right = TreeNode(4)
 st.root.right.left = TreeNode(4)
 
 print("Is Symmetric - ", st.is_symmetric)
+
+print("Root to node 100", t.root_to_node(9))
+
+print("LCA of 2, 100 is", t.lca(2, 100))
